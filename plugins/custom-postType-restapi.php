@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Plugin Name: Custom API
  * Plugin URI: https://buzcoders.com
@@ -9,7 +10,8 @@
  */
 
 
-function wl_posts() {
+function wl_posts()
+{
 	$args = [
 		'numberposts' => 99999,
 		'post_type' => 'post'
@@ -20,7 +22,7 @@ function wl_posts() {
 	$data = [];
 	$i = 0;
 
-	foreach($posts as $post) {
+	foreach ($posts as $post) {
 		$data[$i]['id'] = $post->ID;
 		$data[$i]['title'] = $post->post_title;
 		$data[$i]['excerpt'] = $post->post_excerpt;
@@ -34,7 +36,8 @@ function wl_posts() {
 	return $data;
 }
 
-function wl_post( $slug ) {
+function wl_post($slug)
+{
 	$args = [
 		'name' => $slug['slug'],
 		'post_type' => 'post'
@@ -54,8 +57,34 @@ function wl_post( $slug ) {
 	return $data;
 }
 
+function wl_project($slug) {
+	$args = [
+		'name' => $slug['slug'],
+		'post_type' => 'event'
+	];
 
-function wl_projects() {
+	$post = get_posts($args);
+
+
+	$data['id'] = $post->ID;
+	$data['title'] = $post->post_title;
+	$data['slug'] = $post->post_name;
+	$data['excerpt'] = $post->post_excerpt;
+	$data['featured_image']['thumbnail'] = get_the_post_thumbnail_url($post[0]->ID, 'thumbnail');
+	$data['featured_image']['medium'] = get_the_post_thumbnail_url($post[0]->ID, 'medium');
+	$data['featured_image']['large'] = get_the_post_thumbnail_url($post[0]->ID, 'large');
+	$data['banner-image'] = get_field('banner_image_1080_x1080', $post->ID);
+	$data['first_image'] = get_field('first_image', $post->ID);
+	$data['challenges_and_solution'] = get_field('challenges_and_solution', $post->ID);
+	$data['intro'] = get_field('intro', $post->ID);
+	$data['second_image_1080_x1080'] = get_field('second_image_1080_x1080', $post->ID);
+	$data['the_website_design'] = get_field('the_website_design', $post->ID);
+	$data['the_website_design'] = get_field('the_website_design', $post->ID);
+}
+
+
+function wl_projects()
+{
 	$args = [
 		'numberposts' => 99999,
 		'post_type' => 'event'
@@ -66,38 +95,40 @@ function wl_projects() {
 	$data = [];
 	$i = 0;
 
-	foreach($posts as $post) {
+	foreach ($posts as $post) {
 		$data[$i]['id'] = $post->ID;
 		$data[$i]['title'] = $post->post_title;
-        $data[$i]['slug'] = $post->post_name;
-        $data[$i]['banner-image'] = get_field('banner_image_1080_x1080', $post->ID);
-        $data[$i]['first_image'] = get_field('first_image', $post->ID);
-        $data[$i]['challenges_and_solution'] = get_field('challenges_and_solution', $post->ID);
-        $data[$i]['intro'] = get_field('intro', $post->ID);
-        $data[$i]['second_image_1080_x1080'] = get_field('second_image_1080_x1080', $post->ID);
-        $data[$i]['the_website_design'] = get_field('the_website_design', $post->ID);
-        $data[$i]['the_website_design'] = get_field('the_website_design', $post->ID);
-       
+		$data[$i]['slug'] = $post->post_name;
+		$data[$i]['excerpt'] = $post->post_excerpt;
+		$data['featured_image']['thumbnail'] = get_the_post_thumbnail_url($post[0]->ID, 'thumbnail');
+		$data['featured_image']['medium'] = get_the_post_thumbnail_url($post[0]->ID, 'medium');
+		$data['featured_image']['large'] = get_the_post_thumbnail_url($post[0]->ID, 'large');
+
 		$i++;
 	}
 
 	return $data;
 }
 
-add_action('rest_api_init', function() {
+add_action('rest_api_init', function () {
 	register_rest_route('wl/v1', 'posts', [
 		'methods' => 'GET',
 		'callback' => 'wl_posts',
 	]);
 
-	register_rest_route( 'wl/v1', 'posts/(?P<slug>[a-zA-Z0-9-]+)', array(
+	register_rest_route('wl/v1', 'posts/(?P<slug>[a-zA-Z0-9-]+)', array(
 		'methods' => 'GET',
 		'callback' => 'wl_post',
-    ) );
-    
+	));
 
-    register_rest_route('wl/v1', 'projects', [
+
+	register_rest_route('wl/v1', 'projects', [
 		'methods' => 'GET',
 		'callback' => 'wl_projects',
 	]);
+
+	register_rest_route( 'wl/v1', 'projects/(?P<slug>[a-zA-Z0-9-]+)', array(
+		'methods' => 'GET',
+		'callback' => 'wl_project',
+    ) );
 });
