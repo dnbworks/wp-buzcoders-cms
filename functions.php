@@ -1,6 +1,6 @@
 <?php
 
-require get_theme_file_path('/inc/buzcoders-cpt');
+require get_theme_file_path('/inc/buzcoders-cpt.php');
 
 function doncodes_script_enqueue()
 {
@@ -49,7 +49,7 @@ add_action('init', 'doncodes_theme_setup');
 add_theme_support('post-thumbnails', array(
 	'post',
 	'page',
-	'event',
+	'project',
 ));
 add_theme_support('post-formats', array('aside', 'image', 'video'));
 add_theme_support('html5', array('search-form'));
