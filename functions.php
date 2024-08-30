@@ -2,6 +2,7 @@
 
 require get_theme_file_path('/inc/buzcoders-cpt.php');
 
+
 function doncodes_script_enqueue()
 {
 // dynamic css

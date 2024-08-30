@@ -18,7 +18,7 @@ function buzcoders_custom_post_type (){
 	);
 	$args = array(
 		// adding it to rest api
-		// 'show_in_rest' => true, 
+		'show_in_rest' => true, 
 		'rewrite' => array('slug' => 'projects'), // rewrites the url format
 		'labels' => $labels,
 		'public' => true,

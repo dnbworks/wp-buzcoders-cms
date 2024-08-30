@@ -57,29 +57,45 @@ function wl_post($slug)
 	return $data;
 }
 
-function wl_project($slug) {
+function wl_project($slug)
+{
 	$args = [
 		'name' => $slug['slug'],
-		'post_type' => 'event'
+		'post_type' => 'project'
 	];
-
+	
+	
 	$post = get_posts($args);
 
+	if (count($post)) {
 
-	$data['id'] = $post->ID;
-	$data['title'] = $post->post_title;
-	$data['slug'] = $post->post_name;
-	$data['excerpt'] = $post->post_excerpt;
-	$data['featured_image']['thumbnail'] = get_the_post_thumbnail_url($post[0]->ID, 'thumbnail');
-	$data['featured_image']['medium'] = get_the_post_thumbnail_url($post[0]->ID, 'medium');
-	$data['featured_image']['large'] = get_the_post_thumbnail_url($post[0]->ID, 'large');
-	$data['banner-image'] = get_field('banner_image_1080_x1080', $post->ID);
-	$data['first_image'] = get_field('first_image', $post->ID);
-	$data['challenges_and_solution'] = get_field('challenges_and_solution', $post->ID);
-	$data['intro'] = get_field('intro', $post->ID);
-	$data['second_image_1080_x1080'] = get_field('second_image_1080_x1080', $post->ID);
-	$data['the_website_design'] = get_field('the_website_design', $post->ID);
-	$data['the_website_design'] = get_field('the_website_design', $post->ID);
+		$data = array();
+	
+			// retrieve all taxonomy
+		$technologies = 	array('Taxonomy' => 'Technologies', 'terms' => 	get_the_terms( $post[0]->ID , 'technology' ));
+		$services = 	array('Taxonomy' => 'Serviecs', 'terms' => 	get_the_terms( $post[0]->ID , 'service' ));
+		$industries = 	array('Taxonomy' => 'Technologies', 'terms' => 	get_the_terms( $post[0]->ID , 'field' ));
+		
+		
+		$data['id'] = $post[0]->ID;
+		$data['title'] = $post[0]->post_title;
+		$data['slug'] = $post[0]->post_name;
+		$data['excerpt'] = $post[0]->post_excerpt;
+		$data['banner-image'] = get_field('banner_image_1080_x1080', $post[0]->ID);
+		$data['first_image'] = get_field('first_image', $post[0]->ID);
+		$data['challenges_and_solution'] = get_field('challenges_and_solution', $post[0]->ID);
+		$data['intro'] = get_field('intro', $post[0]->ID);
+		$data['second_image'] = get_field('second_image_1080_x1080', $post[0]->ID);
+		$data['the_website_design'] = get_field('the_website_design', $post[0]->ID);
+		$data['technologies'] = $technologies;
+		$data['services'] = $services;
+		$data['industries'] = $industries;
+	
+		return $data;
+	}
+
+	return false;
+
 }
 
 
@@ -87,7 +103,7 @@ function wl_projects()
 {
 	$args = [
 		'numberposts' => 99999,
-		'post_type' => 'event'
+		'post_type' => 'project'
 	];
 
 	$posts = get_posts($args);
@@ -100,9 +116,10 @@ function wl_projects()
 		$data[$i]['title'] = $post->post_title;
 		$data[$i]['slug'] = $post->post_name;
 		$data[$i]['excerpt'] = $post->post_excerpt;
-		$data['featured_image']['thumbnail'] = get_the_post_thumbnail_url($post[0]->ID, 'thumbnail');
-		$data['featured_image']['medium'] = get_the_post_thumbnail_url($post[0]->ID, 'medium');
-		$data['featured_image']['large'] = get_the_post_thumbnail_url($post[0]->ID, 'large');
+		$data[$i]['featured_image']['thumbnail'] = get_the_post_thumbnail_url($post->ID, 'thumbnail');
+		$data[$i]['featured_image']['medium'] = get_the_post_thumbnail_url($post->ID, 'medium');
+		$data[$i]['featured_image']['large'] = get_the_post_thumbnail_url($post->ID, 'large');
+
 
 		$i++;
 	}
@@ -127,8 +144,8 @@ add_action('rest_api_init', function () {
 		'callback' => 'wl_projects',
 	]);
 
-	register_rest_route( 'wl/v1', 'projects/(?P<slug>[a-zA-Z0-9-]+)', array(
-		'methods' => 'GET',
+	register_rest_route('wl/v1', 'projects/(?P<slug>[a-zA-Z0-9-]+)/', array(
+		'methods' => WP_REST_SERVER::READABLE,
 		'callback' => 'wl_project',
-    ) );
+	));
 });
