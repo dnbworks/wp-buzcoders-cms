@@ -124,7 +124,7 @@ function wl_projects()
 
 		// retrieve all taxonomy
 		$data[$i]['technologies'] = 	array('Taxonomy' => 'Technologies', 'terms' => 	get_the_terms( $post->ID , 'technology' ));
-		$data[$i]['serviecs'] = array('Taxonomy' => 'Serviecs', 'terms' => 	get_the_terms( $post->ID , 'service' ));
+		$data[$i]['services'] = array('Taxonomy' => 'Serviecs', 'terms' => 	get_the_terms( $post->ID , 'service' ));
 		$data[$i]['industries'] = array('Taxonomy' => 'Technologies', 'terms' => 	get_the_terms( $post->ID , 'field' ));
 
 		$i++;
