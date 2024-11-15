@@ -81,11 +81,11 @@ function wl_project($slug)
 		$data['title'] = $post[0]->post_title;
 		$data['slug'] = $post[0]->post_name;
 		$data['excerpt'] = $post[0]->post_excerpt;
-		$data['banner-image'] = get_field('banner_image_1080_x1080', $post[0]->ID);
-		$data['first_image'] = get_field('first_image', $post[0]->ID);
+		$data['banner-image'] = get_field('banner_image', $post[0]->ID);
+		$data['first_image'] = get_field('image1', $post[0]->ID);
 		$data['challenges_and_solution'] = get_field('challenges_and_solution', $post[0]->ID);
 		$data['intro'] = get_field('intro', $post[0]->ID);
-		$data['second_image'] = get_field('second_image_1080_x1080', $post[0]->ID);
+		$data['second_image'] = get_field('second_image', $post[0]->ID);
 		$data['the_website_design'] = get_field('the_website_design', $post[0]->ID);
 		$data['technologies'] = $technologies;
 		$data['services'] = $services;
@@ -111,6 +111,8 @@ function wl_projects()
 	$data = [];
 	$i = 0;
 
+
+
 	foreach ($posts as $post) {
 		$data[$i]['id'] = $post->ID;
 		$data[$i]['title'] = $post->post_title;
@@ -120,6 +122,10 @@ function wl_projects()
 		$data[$i]['featured_image']['medium'] = get_the_post_thumbnail_url($post->ID, 'medium');
 		$data[$i]['featured_image']['large'] = get_the_post_thumbnail_url($post->ID, 'large');
 
+		// retrieve all taxonomy
+		$data[$i]['technologies'] = 	array('Taxonomy' => 'Technologies', 'terms' => 	get_the_terms( $post->ID , 'technology' ));
+		$data[$i]['serviecs'] = array('Taxonomy' => 'Serviecs', 'terms' => 	get_the_terms( $post->ID , 'service' ));
+		$data[$i]['industries'] = array('Taxonomy' => 'Technologies', 'terms' => 	get_the_terms( $post->ID , 'field' ));
 
 		$i++;
 	}
