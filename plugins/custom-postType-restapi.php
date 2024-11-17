@@ -82,7 +82,7 @@ function wl_project($slug)
 		$data['slug'] = $post[0]->post_name;
 		$data['excerpt'] = $post[0]->post_excerpt;
 		$data['banner-image'] = get_field('banner_image', $post[0]->ID);
-		$data['first_image'] = get_field('image1', $post[0]->ID);
+		$data['first_image'] = get_field('first_image', $post[0]->ID);
 		$data['challenges_and_solution'] = get_field('challenges_and_solution', $post[0]->ID);
 		$data['intro'] = get_field('intro', $post[0]->ID);
 		$data['second_image'] = get_field('second_image', $post[0]->ID);
